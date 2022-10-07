@@ -1,3 +1,4 @@
+def BRANCH = scm.branches[0].name
 pipeline 
 {
 	agent any
@@ -11,9 +12,15 @@ pipeline
 		{
       		steps 
 			{
+				
         		script 
 				{
-          			switch(env.BRANCH_NAME) 
+				   
+					if(env.BRANCH_NAME == null)
+					{
+						BRANCH = scm.branches[0].name
+					}
+          			switch(BRANCH) 
 					{
             			case 'develop':
 							mule_env = 'dev'
@@ -40,7 +47,7 @@ pipeline
 		
 			steps 
 			{
-				echo "Branch name : ${BRANCH_NAME}"
+				echo "Branch name : ${BRANCH}"
 				echo "environment ${mule_env}"
 				echo "cloudhub env ${cloudhub_env}"
 				echo "suffix ${env_suffix}"
@@ -55,7 +62,7 @@ pipeline
 			steps 
 			{
 				echo 'Application in Testing Phase… '
-				echo "Branch name : ${BRANCH_NAME}"
+				echo "Branch name : ${BRANCH}"
 				echo "environment ${mule_env}"
 				echo "cloudhub env ${cloudhub_env}"
 				echo "suffix ${env_suffix}"
